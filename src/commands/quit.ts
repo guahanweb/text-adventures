@@ -1,4 +1,4 @@
-import type { Game } from '../lib/game';
+import type { Game } from '../game';
 import { confirm } from '@inquirer/prompts';
 
 export default function quit(game: Game) {

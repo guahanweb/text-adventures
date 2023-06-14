@@ -1,20 +1,6 @@
 import { randomUUID } from 'crypto';
 import { Item } from './item';
 
-export class Portal {
-    id: string;
-    type: string;
-    opened: boolean;
-    locked: boolean;
-
-    constructor() {
-        this.id = randomUUID();
-        this.type = 'doorway';
-        this.opened = true;
-        this.locked = false;
-    }
-}
-
 type EgressDirections = 'n'|'s'|'e'|'w';
 export type Exit = {
     direction: EgressDirections;
@@ -45,29 +31,24 @@ export class Room {
 
         this.exits.push({ direction, portal: uuid });
     }
-}
 
-export class Map {
-    portals: { [uuid: string]: Portal };
-    rooms: { [uuid: string]: Room };
-    layout: string[][]; // grid layout by uuid
-
-    constructor() {
-        this.portals = {};
-        this.rooms = {};
-        this.layout = [[]];
+    addItem(item: Item) {
+        this.items.push(item);
     }
 
-    createPortal() {
-        const portal = new Portal();
-        this.portals[portal.id] = portal;
-        return portal;
-    }
+    removeItem(id: string) {
+        let item: Item|null = null;
 
-    createRoom(coords: { x: number, y: number }) {
-        const room = new Room();
-        this.rooms[room.id] = room;
-        this.layout[coords.y][coords.x] = room.id;
-        return room;
+        this.items = this.items.filter((curr: Item) => {
+            if (curr.id === id) {
+                // remove from the array
+                item = curr;
+                return false;
+            }
+
+            return true;
+        });
+
+        return item;
     }
 }

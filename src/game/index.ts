@@ -1,13 +1,23 @@
 import { Player } from './player';
 import { Map } from './map';
-import { commandPrompt, validateCommand } from './turn-prompt';
+import { Room } from './room';
+import { Item } from './item';
+import { commandPrompt } from '../lib/turn-prompt';
+import chalk from 'chalk';
 
 function initializeMap() {
     const map = new Map();
 
+    const candlestick = new Item();
+    candlestick.name = 'candlestick';
+    candlestick.description = 'tarnished candlestick';
+    candlestick.obtainable = true;
+
     const room1 = map.createRoom({ x: 0, y: 0 });
     room1.name = 'Foyer';
-    room1.description = 'You are staning in the entryway to the house.'
+    room1.description = 'You are standing in the entryway to the house.'
+
+    room1.addItem(candlestick);
 
     const room2 = map.createRoom({ x: 1, y: 0 });
     room2.name = 'Dining Room';
@@ -47,6 +57,21 @@ export class Game {
 
     start(turnHandler: (cmd: string, opts?: string[]) => void) {
         this.execTurn(turnHandler);
+    }
+
+    getCurrentRoom(): Room {
+        const room = this.map.getRoom(this.position);
+        return room;
+    }
+
+    updatePosition(coords: PlayerPosition) {
+        this.position = coords;
+
+        const room = this.getCurrentRoom();
+        console.log('');
+        console.log(chalk.white(room.name));
+        console.log(room.description);
+        console.log('');
     }
 
     async execTurn(turnHandler: (cmd: string, opts?: string[]) => void) {

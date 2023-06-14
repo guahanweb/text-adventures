@@ -1,4 +1,4 @@
-import { Game } from './lib/game';
+import { Game } from './game';
 import { initialize, process } from './commands';
 
 if (require.main === module) {

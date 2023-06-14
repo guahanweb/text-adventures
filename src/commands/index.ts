@@ -1,7 +1,10 @@
-import type { Game } from '../lib/game';
+import type { Game } from '../game';
 type RouteHandler = (opts?: string[]) => void;
 
 import quitCommand from './quit';
+import lookCommand from './look';
+import { pickup, drop, inventory } from './inventory';
+import { move } from './move';
 
 type RouteMapping = {
     [key: string]: RouteHandler;
@@ -10,9 +13,20 @@ type RouteMapping = {
 const routes: RouteMapping = {};
 
 export function initialize(game: Game) {
-    // route all handlers here
-    command('q', quitCommand(game));
+    // game controls
     command('quit', quitCommand(game));
+
+    // inspection commands
+    command('look', lookCommand(game));
+
+    // inventory commands
+    command('pickup', pickup(game));
+    command('drop', drop(game));
+    command('inventory', inventory(game));
+
+    // movement commands
+    command('move', move(game));
+    command('go', move(game));
 }
 
 export function command(action: string, handler: RouteHandler) {
